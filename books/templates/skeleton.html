@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+  <title>Starter Template - Materialize</title>
+
+    <!-- CSS  -->
+    {% load static %}
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="{% static 'css/materialize.css' %}" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="{% static 'css/style.css' %}" type="text/css" rel="stylesheet" media="screen,projection"/>
+</head>
+<body>
+  <nav class="light-blue lighten-1" role="navigation">
+    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">
+        <img src="{% static 'images/logo.png' %}" />
+    </a>
+
+      <ul id="nav-mobile" class="sidenav">
+        <li><a href="#">Navbar Link</a></li>
+      </ul>
+      <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+       
+    </div>
+  </nav>
+  <div class="section no-pad-bot" id="index-banner">
+    <div class="container">
+    <div class="row">
+        {% if objects %}
+            {% for object in objects %}
+            <div class="col s12 m4">
+                <div class="card medium">
+                    <div class="card-image">
+                        {% if object.object_type == "book" %}
+                            <img src="{% static 'images/book_template.jpeg' %}" alt="image of a book cover">
+                        {% else %}
+                            <img src="{% static 'images/movie_strip.webp' %}" alt="image of a book cover">
+                            {% endif %}
+                        <span class="card-title">{{ object.name }}</span>
+
+                    </div>
+                    <div class="card-content">
+                        <p class="modal-trigger" href="#modal{{ forloop.counter }}">{{ object.synopsis }}</p>
+                    </div>
+                    <div class="card-action">
+                        <a href="{% url 'synopsis_recommendation' object.synopsis|truncatechars:10 %}" class="btn ">More like this</a>
+                        <a href="{% url 'genre_recommendation' object.genre %}" class="btn tooltipped" data-tooltip="{{ object.object_type | upper }} | {{ object.genre | upper}}">
+                            {{ object.genre | truncatechars:10 }}
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Modal Structure -->
+                <div id="modal{{ forloop.counter }}" class="modal">
+                    <div class="modal-content">
+                        <h4>{{ object.name }}</h4>
+                        <p>{{ object.synopsis }}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="center">
+
+                <h5>Looks like we are out of recommendations for your request.</h5>
+                <h5>Try one of these Genres before you go</h5>
+                {% for genre in genres %}
+                    <a href="{% url 'genre_recommendation' genre %}">
+                        <span class="new badge m2">
+                            {{ genre }}
+                        </span>
+                    </a>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+    </div>
+  </div>
+
+  <!--  Scripts-->
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="{% static 'js/materialize.js' %}"></script>
+  <script src="{% static 'js/init.js' %}"></script>
+<!-- #ee6e73; -->
+
+  </body>
+</html>
